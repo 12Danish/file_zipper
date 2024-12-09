@@ -13,12 +13,12 @@ void BiBufferStream::loadInput(ifstream& file) {
 }
 
 char BiBufferStream::fetchInput() {
-    if (inputPos >= inputSize) throw std::out_of_range("Input buffer is empty");
+    if (inputPos >= inputSize) throw out_of_range("Input buffer is empty");
     return inputBuffer[inputPos++];
 }
 
 void BiBufferStream::writeOutput(char c) {
-    if (outputPos >= bufferSize) flushOutput(std::cout);
+    if (outputPos >= bufferSize) flushOutput(cout);
     outputBuffer[outputPos++] = c;
 }
 
