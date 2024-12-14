@@ -58,6 +58,16 @@ T &CustomVector<T>::operator[](size_t index)
 }
 
 template <typename T>
+const T &CustomVector<T>::operator[](size_t index) const
+{
+    if (index >= size)
+    {
+        throw std::out_of_range("Index out of range");
+    }
+    return data[index];
+}
+
+template <typename T>
 size_t CustomVector<T>::getSize() const
 {
     return size;

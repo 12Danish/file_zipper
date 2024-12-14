@@ -30,6 +30,8 @@ public:
     // Access element at a specific index
     T &operator[](size_t index);
 
+    const T &operator[](size_t index) const;
+
     // Get the current size
     size_t getSize() const;
 
