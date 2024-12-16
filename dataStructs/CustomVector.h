@@ -8,15 +8,24 @@ template <typename T>
 class CustomVector
 {
 private:
-    T *data;
-    size_t size;
-    size_t capacity;
+    T *data;         // Pointer to the underlying array
+    size_t size;     // Current number of elements
+    size_t capacity; // Current capacity of the array
 
+    // Resize the array when capacity is exceeded
     void resize();
 
 public:
-    // Constructor
+    // Default constructor
     CustomVector();
+
+    // Destructor
+
+    // Copy Constructor
+    CustomVector(const CustomVector &other);
+
+    // Copy Assignment Operator
+    CustomVector &operator=(const CustomVector &other);
 
     // Destructor
     ~CustomVector();
@@ -27,9 +36,10 @@ public:
     // Remove the last element
     void remove_last();
 
-    // Access element at a specific index
+    // Access element at a specific index (mutable)
     T &operator[](size_t index);
 
+    // Access element at a specific index (const)
     const T &operator[](size_t index) const;
 
     // Get the current size
@@ -39,6 +49,7 @@ public:
     size_t getCapacity() const;
 };
 
-#include "CustomVector.cpp" // Include the source file for template implementation
+// Include the source file for template implementation
+#include "CustomVector.cpp"
 
 #endif // CUSTOM_VECTOR_H

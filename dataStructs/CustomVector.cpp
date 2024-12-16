@@ -1,16 +1,48 @@
 #include "CustomVector.h"
+#include <iostream>
 
+// Default constructor
 template <typename T>
-CustomVector<T>::CustomVector() : data(nullptr), size(0), capacity(0)
-{
-}
+CustomVector<T>::CustomVector() : data(nullptr), size(0), capacity(0) {}
 
+// Destructor
 template <typename T>
 CustomVector<T>::~CustomVector()
 {
     delete[] data;
 }
 
+// Copy Constructor
+template <typename T>
+CustomVector<T>::CustomVector(const CustomVector &other)
+    : size(other.size), capacity(other.capacity)
+{
+    data = new T[capacity];
+    for (size_t i = 0; i < size; i++)
+    {
+        data[i] = other.data[i];
+    }
+}
+
+// Copy Assignment Operator
+template <typename T>
+CustomVector<T> &CustomVector<T>::operator=(const CustomVector &other)
+{
+    if (this != &other) // Avoid self-assignment
+    {
+        delete[] data; // Free existing memory
+        size = other.size;
+        capacity = other.capacity;
+        data = new T[capacity];
+        for (size_t i = 0; i < size; i++)
+        {
+            data[i] = other.data[i];
+        }
+    }
+    return *this;
+}
+
+// Resize function to increase capacity
 template <typename T>
 void CustomVector<T>::resize()
 {
@@ -27,17 +59,25 @@ void CustomVector<T>::resize()
     data = newData;
 }
 
+// Append an element to the vector
 template <typename T>
 void CustomVector<T>::append(const T &value)
 {
     if (size == capacity)
     {
-        this->resize();
+        resize();
+    }
+
+    // If data is null (uninitialized), allocate memory
+    if (!data)
+    {
+        data = new T[capacity];
     }
 
     data[size++] = value;
 }
 
+// Remove the last element from the vector
 template <typename T>
 void CustomVector<T>::remove_last()
 {
@@ -47,6 +87,7 @@ void CustomVector<T>::remove_last()
     }
 }
 
+// Access an element at a given index (mutable)
 template <typename T>
 T &CustomVector<T>::operator[](size_t index)
 {
@@ -57,6 +98,7 @@ T &CustomVector<T>::operator[](size_t index)
     return data[index];
 }
 
+// Access an element at a given index (const version)
 template <typename T>
 const T &CustomVector<T>::operator[](size_t index) const
 {
@@ -67,12 +109,14 @@ const T &CustomVector<T>::operator[](size_t index) const
     return data[index];
 }
 
+// Get the current size of the vector
 template <typename T>
 size_t CustomVector<T>::getSize() const
 {
     return size;
 }
 
+// Get the current capacity of the vector
 template <typename T>
 size_t CustomVector<T>::getCapacity() const
 {
