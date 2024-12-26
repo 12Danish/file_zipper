@@ -20,13 +20,13 @@ HuffmanTree::Node::~Node()
 }
 
 /*
- * MinHeap Implementation
- * The MinHeap is used to efficiently find the two lowest frequency nodes when building the tree
+ * CustomMinHeap Implementation
+ * The CustomMinHeap is used to efficiently find the two lowest frequency nodes when building the tree
  */
 
 // Constructor: Creates a new min heap with specified capacity
 // Allocates memory for the array of Node pointers
-HuffmanTree::MinHeap::MinHeap(unsigned capacity)
+HuffmanTree::CustomMinHeap::CustomMinHeap(unsigned capacity)
     : size(0), capacity(capacity)
 {
     array = new Node *[capacity];
@@ -34,7 +34,7 @@ HuffmanTree::MinHeap::MinHeap(unsigned capacity)
 
 // Destructor: Frees the memory allocated for the heap array
 // Note: Does not delete the nodes themselves, as they become part of the tree
-HuffmanTree::MinHeap::~MinHeap()
+HuffmanTree::CustomMinHeap::~CustomMinHeap()
 {
     delete[] array;
 }
@@ -58,7 +58,7 @@ int HuffmanTree::getTreeHeight(Node *root)
 }
 
 /*
- * MinHeap Helper Functions
+ * CustomMinHeap Helper Functions
  * These private methods handle the internal operations of the min heap
  */
 
@@ -73,7 +73,7 @@ void HuffmanTree::swapNodes(Node **a, Node **b)
 
 // Maintains the min heap property starting from index idx
 // Ensures that the parent node has lower frequency than its children
-void HuffmanTree::minHeapify(MinHeap *minHeap, int idx)
+void HuffmanTree::minHeapify(CustomMinHeap *minHeap, int idx)
 {
     int smallest = idx;
     int left = 2 * idx + 1;  // Left child index
@@ -103,14 +103,14 @@ void HuffmanTree::minHeapify(MinHeap *minHeap, int idx)
 
 // Checks if the heap contains exactly one node
 // Used as a termination condition when building the Huffman tree
-bool HuffmanTree::isSizeOne(MinHeap *minHeap)
+bool HuffmanTree::isSizeOne(CustomMinHeap *minHeap)
 {
     return (minHeap->size == 1);
 }
 
 // Extracts and returns the node with minimum frequency from the heap
 // Maintains the heap property after extraction
-HuffmanTree::Node *HuffmanTree::extractMin(MinHeap *minHeap)
+HuffmanTree::Node *HuffmanTree::extractMin(CustomMinHeap *minHeap)
 {
     Node *temp = minHeap->array[0];                        // Store the root
     minHeap->array[0] = minHeap->array[minHeap->size - 1]; // Move last element to root
@@ -121,7 +121,7 @@ HuffmanTree::Node *HuffmanTree::extractMin(MinHeap *minHeap)
 
 // Inserts a new node into the min heap
 // Maintains the heap property by moving the node up as needed
-void HuffmanTree::insertMinHeap(MinHeap *minHeap, Node *minHeapNode)
+void HuffmanTree::insertMinHeap(CustomMinHeap *minHeap, Node *minHeapNode)
 {
     ++minHeap->size;           // Increase heap size
     int i = minHeap->size - 1; // Start at the last position
@@ -138,7 +138,7 @@ void HuffmanTree::insertMinHeap(MinHeap *minHeap, Node *minHeapNode)
 
 // Converts an array of nodes into a min heap
 // Called during initial heap creation
-void HuffmanTree::buildMinHeap(MinHeap *minHeap)
+void HuffmanTree::buildMinHeap(CustomMinHeap *minHeap)
 {
     int n = minHeap->size - 1;
     // Start from last non-leaf node and heapify each subtree
@@ -150,9 +150,9 @@ void HuffmanTree::buildMinHeap(MinHeap *minHeap)
 
 // Creates and initializes a min heap from the input data and frequency arrays
 // Returns a pointer to the newly created min heap
-HuffmanTree::MinHeap *HuffmanTree::createAndBuildMinHeap(char data[], int freq[], int size)
+HuffmanTree::CustomMinHeap *HuffmanTree::createAndBuildMinHeap(char data[], int freq[], int size)
 {
-    MinHeap *minHeap = new MinHeap(size);
+    CustomMinHeap *minHeap = new CustomMinHeap(size);
 
     // Create a node for each character and its frequency
     for (int i = 0; i < size; ++i)
@@ -176,7 +176,7 @@ HuffmanTree::MinHeap *HuffmanTree::createAndBuildMinHeap(char data[], int freq[]
 HuffmanTree::Node *HuffmanTree::buildHuffmanTree(char data[], int freq[], int size)
 {
     Node *left, *right, *top;
-    MinHeap *minHeap = createAndBuildMinHeap(data, freq, size);
+    CustomMinHeap *minHeap = createAndBuildMinHeap(data, freq, size);
 
     // Iterate until only one node remains in the heap
     while (!isSizeOne(minHeap))

@@ -33,26 +33,26 @@ public:
     std::unordered_map<char, std::string> getCodes(Node *root);
 
 private:
-    // MinHeap structure to store nodes with their frequencies
-    struct MinHeap
+    // CustomMinHeap structure to store nodes with their frequencies
+    struct CustomMinHeap
     {
         unsigned size;     // Current size of the heap
         unsigned capacity; // Maximum capacity of the heap
         Node **array;      // Array of pointers to nodes
 
         // Constructor to initialize a heap of given capacity
-        MinHeap(unsigned capacity);
+        CustomMinHeap(unsigned capacity);
         // Destructor to free memory allocated for the heap
-        ~MinHeap();
+        ~CustomMinHeap();
     };
 
     void swapNodes(Node **a, Node **b);
-    void minHeapify(MinHeap *minHeap, int idx);
-    bool isSizeOne(MinHeap *minHeap);
-    Node *extractMin(MinHeap *minHeap);
-    void insertMinHeap(MinHeap *minHeap, Node *minHeapNode);
-    void buildMinHeap(MinHeap *minHeap);
-    MinHeap *createAndBuildMinHeap(char data[], int freq[], int size);
+    void minHeapify(CustomMinHeap *minHeap, int idx);
+    bool isSizeOne(CustomMinHeap *minHeap);
+    Node *extractMin(CustomMinHeap *minHeap);
+    void insertMinHeap(CustomMinHeap *minHeap, Node *minHeapNode);
+    void buildMinHeap(CustomMinHeap *minHeap);
+    CustomMinHeap *createAndBuildMinHeap(char data[], int freq[], int size);
     void getCodesHelper(Node *root, std::string code, std::unordered_map<char, std::string> &codeMap);
 };
 
