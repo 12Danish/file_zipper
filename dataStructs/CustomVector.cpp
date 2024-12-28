@@ -122,3 +122,15 @@ size_t CustomVector<T>::getCapacity() const
 {
     return capacity;
 }
+
+template <typename T>
+T *CustomVector<T>::getData()
+{
+    return data;
+}
+
+template <typename T>
+const T *CustomVector<T>::getData() const
+{
+    return data;
+}

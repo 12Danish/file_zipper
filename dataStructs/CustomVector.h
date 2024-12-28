@@ -47,6 +47,10 @@ public:
 
     // Get the current capacity
     size_t getCapacity() const;
+
+    T *getData();
+
+    const T *getData() const;
 };
 
 // Include the source file for template implementation
