@@ -168,7 +168,7 @@ void huffman::saveEncodedFile()
     // Saving codes of every charachter appearing in the input file
     /*
     Over here I am reading each character from the input file and then later on
-    appending its coresponding binary code as a charcter representation of the interger I get from each 
+    appending its coresponding binary code as a charcter representation of the interger I get from each
     8 bits of the code.
     */
     inFile.get(id);
@@ -202,6 +202,13 @@ void huffman::saveEncodedFile()
 
 void huffman::saveDecodedFile()
 {
+    /*
+     * The saveDecodedFile function reads a Huffman encoded file, decodes its content using the Huffman tree,
+     * and writes the decoded data to an output file. It handles the skipping of metadata, accounts for
+     * padding bits added during encoding, and traverses the Huffman tree bit by bit to reconstruct the
+     * original characters. The function also ensures proper handling of file streams and memory management.
+     */
+
     inFile.open(inFileName, ios::in | ios::binary);
     outFile.open(outFileName, ios::out);
     unsigned char size;
@@ -257,6 +264,11 @@ void huffman::saveDecodedFile()
 
 void huffman::getTree()
 {
+    /*
+    This function reads the Huffman tree data from a binary file. It first reads the size of the tree (number of nodes).
+    Then, for each node, it reads a character and its corresponding Huffman code (in binary).
+    The padding in the code is removed, and the tree is reconstructed by adding each node to the Huffman tree.
+*/
     inFile.open(inFileName, ios::in | ios::binary);
     // Reading size of CustomMinHeap
     unsigned char size;
