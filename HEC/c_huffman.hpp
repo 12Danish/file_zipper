@@ -2,12 +2,15 @@
 // Header Guards to prevent header files from being included multiple times
 #ifndef HUFFMAN_HPP
 #define HUFFMAN_HPP
+using namespace std;
 #include <string>
 #include "../dataStructs/CustomMinHeap.h"
 #include "../dataStructs/CustomVector.h"
+#include <optional>
 #include <fstream>
-using namespace std;
+#include <filesystem>
 
+namespace fs = std::filesystem;
 // Defining Huffman Tree Node
 struct Node
 {
@@ -26,10 +29,10 @@ class huffman
 {
 private:
     CustomVector<Node *> arr;
-
+    char mode;
     fstream inFile, outFile;
 
-    string inFileName, outFileName;
+    string inPath, outPath;
 
     Node *root;
 
@@ -47,6 +50,10 @@ private:
     // Initializing a vector of tree nodes representing character's ascii value and initializing its frequency with 0
     void createArr();
 
+    void clearMinHeap();
+
+    void resetArr();
+
     // Traversing the constructed tree to generate huffman codes of each present character
     void traverse(Node *, string);
 
@@ -60,7 +67,7 @@ private:
     void buildTree(char, string &);
 
     // Creating Min Heap of Nodes by frequency of characters in the input file
-    void createMinHeap();
+    void createMinHeap(optional<fs::path> dir_file = nullopt);
 
     // Constructing the Huffman tree
     void createTree();
@@ -69,7 +76,7 @@ private:
     void createCodes();
 
     // Saving Huffman Encoded File
-    void saveEncodedFile();
+    void saveEncodedFile(optional<fs::path> dir_file = nullopt);
 
     // Saving Decoded File to obtain the original File
     void saveDecodedFile();
@@ -79,15 +86,20 @@ private:
 
 public:
     // Constructor
-    huffman(string inFileName, string outFileName)
+    huffman(string inPath, string outPath, char mode)
     {
-        this->inFileName = inFileName;
-        this->outFileName = outFileName;
+        this->mode = mode;
+        this->inPath = inPath;
+        this->outPath = outPath;
         createArr();
     }
     // Compressing input file
     void compress();
     // Decrompressing input file
     void decompress();
+
+    void compress_directories();
+
+    void decompress_directories();
 };
 #endif

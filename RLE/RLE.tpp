@@ -5,6 +5,8 @@
 #include <string>
 #include <utility>
 #include <filesystem>
+#include "../file_utils.h"
+
 using namespace std;
 
 namespace fs = std::filesystem;
@@ -177,20 +179,6 @@ void RLE<T>::process_decompression(const string &compressedFile, const string &d
 
     auto decompressedData = rle_decompress(compressedData);
     save_decompressed_to_file(decompressedFile, decompressedData);
-}
-
-template <typename T>
-CustomVector<fs::path> RLE<T>::list_files_recursive(const fs::path &dir)
-{
-    CustomVector<fs::path> filePaths;
-    for (const auto &entry : fs::recursive_directory_iterator(dir))
-    {
-        if (entry.is_regular_file())
-        {
-            filePaths.append(entry.path());
-        }
-    }
-    return filePaths;
 }
 
 template <typename T>

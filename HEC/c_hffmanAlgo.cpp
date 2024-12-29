@@ -1,13 +1,38 @@
+using namespace std;
 
 #include "c_huffman.hpp"
 #include "../dataStructs/CustomVector.h"
 #include "../dataStructs/CustomMinHeap.h"
+#include <filesystem>
+#include <optional>
+#include "../file_utils.h"
+
+namespace fs = std::filesystem;
+
 void huffman::createArr()
 {
     for (int i = 0; i < 128; i++)
     {
         arr.append(new Node());
         arr[i]->data = i;
+        arr[i]->freq = 0;
+    }
+}
+
+void huffman::clearMinHeap()
+{
+    while (!minHeap.empty())
+    {
+        minHeap.pop(); // Remove all elements
+    }
+}
+
+void huffman::resetArr()
+{
+
+    for (int i = 0; i < 128; i++)
+    {
+
         arr[i]->freq = 0;
     }
 }
@@ -75,10 +100,24 @@ void huffman::buildTree(char a_code, string &path)
     curr->data = a_code;
 }
 
-void huffman::createMinHeap()
+void huffman::createMinHeap(optional<fs::path> dir_file)
 {
     char id;
-    inFile.open(inFileName, ios::in);
+
+    if (mode == 'f')
+    {
+        inFile.open(inPath, ios::in);
+    }
+
+    else if (dir_file.has_value()) // Check if dir_file has a value
+    {
+        inFile.open(dir_file->string(), std::ios::in); // Open the file using dir_file
+    }
+    else
+    {
+        throw std::invalid_argument("dir_file must be provided when mode is not 'f'");
+    }
+
     inFile.get(id);
     // Incrementing frequency of characters that appear in the input file
     while (!inFile.eof())
@@ -125,11 +164,24 @@ void huffman::createCodes()
     traverse(root, "");
 }
 
-void huffman::saveEncodedFile()
+void huffman::saveEncodedFile(optional<fs::path> dir_file)
 {
     // Saving encoded (.huf) file
-    inFile.open(inFileName, ios::in);
-    outFile.open(outFileName, ios::out | ios::binary);
+    if (mode == 'f')
+    {
+        inFile.open(inPath, ios::in);
+    }
+
+    else if (dir_file.has_value()) // Check if dir_file has a value
+    {
+        inFile.open(dir_file->string(), std::ios::in); // Open the file using dir_file
+    }
+    else
+    {
+        throw std::invalid_argument("dir_file must be provided when mode is not 'f'");
+    }
+
+    outFile.open(outPath, ios::out | ios::binary);
     string in = "";
     string s = "";
     char id;
@@ -194,8 +246,16 @@ void huffman::saveEncodedFile()
     // append count of appended 0's
     in += (char)count;
 
+    // Calculate the total size of the encoded data
+    size_t totalSize = in.size();
+
+    if (mode != 'f')
+    {
+        // Write the total size to the output file (e.g., as a 4-byte integer)
+        outFile.write(reinterpret_cast<const char *>(&totalSize), sizeof(totalSize));
+    };
     // write the in string to the output file
-    outFile.write(in.c_str(), in.size());
+    outFile.write(in.c_str(), totalSize);
     inFile.close();
     outFile.close();
 }
@@ -209,8 +269,8 @@ void huffman::saveDecodedFile()
      * original characters. The function also ensures proper handling of file streams and memory management.
      */
 
-    inFile.open(inFileName, ios::in | ios::binary);
-    outFile.open(outFileName, ios::out);
+    inFile.open(inPath, ios::in | ios::binary);
+    outFile.open(outPath, ios::out);
     unsigned char size;
     inFile.read(reinterpret_cast<char *>(&size), 1);
     // Reading count at the end of the file which is number of bits appended to make final value 8-bit
@@ -269,7 +329,7 @@ void huffman::getTree()
     Then, for each node, it reads a character and its corresponding Huffman code (in binary).
     The padding in the code is removed, and the tree is reconstructed by adding each node to the Huffman tree.
 */
-    inFile.open(inFileName, ios::in | ios::binary);
+    inFile.open(inPath, ios::in | ios::binary);
     // Reading size of CustomMinHeap
     unsigned char size;
     inFile.read(reinterpret_cast<char *>(&size), 1);
@@ -312,4 +372,91 @@ void huffman::decompress()
 {
     getTree();
     saveDecodedFile();
+}
+
+void huffman::compress_directories()
+{
+    // Open the output file for writing
+    ofstream outFile(outPath, ios::binary);
+    if (!outFile.is_open())
+    {
+        cerr << "Error: Could not open file " << outPath << " for writing." << endl;
+        return;
+    }
+
+    // Base directory path
+    fs::path basePath = inPath;
+
+    // List all files recursively using CustomVector
+    CustomVector<fs::path> files = list_files_recursive(basePath);
+
+    // Write the number of files to the output file
+    size_t fileCount = files.getSize();
+    outFile.write(reinterpret_cast<const char *>(&fileCount), sizeof(fileCount));
+
+    for (size_t i = 0; i < fileCount; ++i)
+    {
+        const auto &file = files[i];
+
+        // Compute the relative path from the base directory
+        string relativePath = fs::relative(file, basePath).string();
+
+        // Write the relative path size and the path itself
+        size_t pathSize = relativePath.size();
+        outFile.write(reinterpret_cast<const char *>(&pathSize), sizeof(pathSize));
+        outFile.write(relativePath.c_str(), pathSize);
+
+        createMinHeap(file);
+        createTree();
+        createCodes();
+        saveEncodedFile(file);
+        resetArr();
+        clearMinHeap();
+    }
+
+    outFile.close();
+}
+
+void huffman::decompress_directories()
+{
+    // Open the compressed file for reading
+    ifstream inFile(inPath, ios::binary);
+    if (!inFile.is_open())
+    {
+        cerr << "Error: Could not open file " << inPath << " for reading." << endl;
+        return;
+    }
+
+    // Base path for output directory
+    fs::path outputBasePath = outPath;
+
+    // Read the number of files
+    size_t fileCount;
+    inFile.read(reinterpret_cast<char *>(&fileCount), sizeof(fileCount));
+
+    for (size_t i = 0; i < fileCount; ++i)
+    {
+        // Read the relative path size and the path itself
+        size_t pathSize;
+        inFile.read(reinterpret_cast<char *>(&pathSize), sizeof(pathSize));
+
+        CustomVector<char> relativePathVector;
+        for (size_t j = 0; j < pathSize; ++j)
+        {
+            char ch;
+            inFile.read(&ch, sizeof(ch));
+            relativePathVector.append(ch);
+        }
+        string relativePath(relativePathVector.getData(), pathSize); // Convert CustomVector to string
+
+        // Construct the full output path
+        fs::path outputPath = outputBasePath / relativePath;
+
+        // Create necessary directories for the file
+        fs::create_directories(outputPath.parent_path());
+
+        outFile.close();
+    }
+
+    inFile.close();
 }

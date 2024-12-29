@@ -21,7 +21,6 @@ private:
     static void save_decompressed_to_file(const string &filename, const CustomVector<T> &decompressed);
     // Methods to handle files directly (main function will use these)
     static CustomVector<T> load_input_file(const string &filename);
-    static CustomVector<fs::path> list_files_recursive(const fs::path &dir);
 
 public:
     static void process_compression(const string &inputFile, const string &compressedFile);

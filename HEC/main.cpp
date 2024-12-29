@@ -25,14 +25,14 @@ int main()
         cout << "Enter path where you want to store the compressed file:";
         cin >> outpath;
         clock_t tStart = clock();
-        huffman f(inpath, outpath);
-        f.compress();
-        const char *inchararr = inpath.c_str();
-        const char *outchararr = outpath.c_str();
-        cout << "Time taken: " << (1.0 * (clock() - tStart) / CLOCKS_PER_SEC) << "sec" << endl;
-        cout << "Input File Size : " << filesize(inchararr) << " bytes." << endl;
-        cout << "Compressed File Size : " << filesize(outchararr) << " bytes." << endl;
-        cout << "Compression Ratio : " << (1.0 * filesize(outchararr) / filesize(inchararr)) << endl;
+        huffman f(inpath, outpath, 'd');
+        f.compress_directories();
+        // const char *inchararr = inpath.c_str();
+        // const char *outchararr = outpath.c_str();
+        // cout << "Time taken: " << (1.0 * (clock() - tStart) / CLOCKS_PER_SEC) << "sec" << endl;
+        // cout << "Input File Size : " << filesize(inchararr) << " bytes." << endl;
+        // cout << "Compressed File Size : " << filesize(outchararr) << " bytes." << endl;
+        // cout << "Compression Ratio : " << (1.0 * filesize(outchararr) / filesize(inchararr)) << endl;
     }
     else if (workingMode == "decompress")
     {
@@ -48,7 +48,7 @@ int main()
         cout << "Enter path where you want to store the decompressed file:";
         cin >> outpath;
         clock_t tStart = clock();
-        huffman f(inpath, outpath);
+        huffman f(inpath, outpath, 'd');
         f.decompress();
         const char *inchararr = inpath.c_str();
         const char *outchararr = outpath.c_str();
