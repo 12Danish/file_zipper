@@ -63,7 +63,7 @@ For detailed documentation about the data structures, algorithms, implementation
 
 [CustomMinHeap](https://github.com/12Danish/file_zipper/blob/main/docs/datas_structs/CustomMinHeap.md)
 
-### Algorithms
+### Algorithms:
 
 [RLE](https://github.com/12Danish/file_zipper/blob/main/docs/Algorithms/RLE.md)
 
