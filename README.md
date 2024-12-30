@@ -1,6 +1,6 @@
-# File Compression System
+# File Cmpression Project
 
-A C++ implementation of a file compression system that leverages both Run-Length Encoding (RLE) and Huffman compression algorithms to compress individual text files and directories efficiently.
+A C++ implementation of a file compression system that leverages both Run-Length Encoding (RLE) and Huffman compression algorithms to compress individual text files and directories efficiently(As of now RLE can perform directory compression/zipping).
 
 ## Features
 
@@ -73,6 +73,4 @@ make
 
 ## Documentation
 
-For detailed documentation about the algorithms, implementation details, and API references, visit our [Documentation Page][doc-link].
-
-[doc-link]: # "Documentation link to be added"
+For detailed documentation about the data structures, algorithms, implementation details please view the following urls:
