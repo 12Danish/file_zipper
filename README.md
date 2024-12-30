@@ -43,34 +43,28 @@ project_root/
 
 1. Clone the repository
 
-```bash
-git clone https://github.com/yourusername/compression-system.git
-cd compression-system
-```
-
 2. Create and navigate to build directory
-
-```bash
-mkdir build
-cd build
-```
 
 3. Generate build files
 
-```bash
-cmake ..
-```
-
 4. Compile the project
-
-```bash
-make
-```
 
 ## Running the Program
 
-[Instructions for running the program will be added]
+The entry point for the program is main.cpp, run it to run the application.
 
 ## Documentation
 
 For detailed documentation about the data structures, algorithms, implementation details please view the following urls:
+
+### Data Structures:
+
+[CustomVector](https://github.com/12Danish/file_zipper/blob/main/docs/datas_structs/CustomVector.md)
+
+[CustomMinHeap](https://github.com/12Danish/file_zipper/blob/main/docs/datas_structs/CustomMinHeap.md)
+
+### Algorithms
+
+[RLE](https://github.com/12Danish/file_zipper/blob/main/docs/Algorithms/RLE.md)
+
+[HEC](https://github.com/12Danish/file_zipper/blob/main/docs/Algorithms/HEC.md)
